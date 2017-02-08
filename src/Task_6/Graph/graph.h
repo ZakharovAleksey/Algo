@@ -14,18 +14,16 @@ public:
 	~Graph();
 
 	void GenerateGraph(const std::string & fileName);
-	void FindPaths(int startId, int secondId);
-
+	void FindPaths(const int & startId, const int & finishId);
 	void Display() const;
-
+	void Solver(const std::string & fileName, const int & start, const int & finish);
 
 private:
 	void AddEdge(const int & start, const int & finish, const int & width);
 	// ѕереписать через указатели так как мен€ютс€
-	void findStep(const int & start, const int & finish, std::vector<bool> & isVisited, std::vector<int> & path);
-
+	void FindStep(const int & start, const int & finish, std::vector<bool> & isVisited, std::vector<int> & path);
 	void FindMaxArmatasWidth(const std::vector<int> & curPath);
-	int getWidth(const int & start, const int & finish);
+	int GetRoadWidth(const int & start, const int & finish);
 
 
 	int nodesNumber_;

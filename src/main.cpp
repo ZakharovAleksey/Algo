@@ -9,7 +9,7 @@
 
 // Ќужен бдет еще менеджер который управл€ет задини€ми а в 6 он провер€ет корректность ввода пользовател€
 
-// „тобы делать дороги двухнаправленными надо просто в графе добавл€ть два пути сразу!! A->B и из B->A тогда может двигатьс€ и туда и туда!!
+// „тобы делать дороги двухнаправленными надо просто в графе добавл€ть два пути сразу!! A->B и из B->A тогда может двигатьс€ и туда и туда!!!
 int main()
 {
 	srand(time(NULL));
@@ -17,12 +17,16 @@ int main()
 	//Task5Test test(5);
 	//test.TestFunction(5);
 
-	Generator gen(5, 7, "test");
+
+	int citiesNumber = 5;
+	int roadsNumber = 7;
+	std::string outFileName = "test";
+
+	Generator gen(citiesNumber, roadsNumber, outFileName);
 	gen.GenerateRoads();
 
-	Graph gr(5, 7);
-	gr.GenerateGraph("test");
-	gr.FindPaths(0, 3);
+	Graph gr(citiesNumber, roadsNumber);
+	gr.Solver(outFileName, 0, 3);
 
 	return 0;
 }

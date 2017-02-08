@@ -7,7 +7,7 @@
 
 Graph::Graph(const int & nodesNumber, const int & relationNumber) : 
 	nodesNumber_(nodesNumber), relationNumber_(relationNumber), 
-	minWidth_(100), maxArmatasWidth_(100)
+	minWidth_(100), maxArmatasWidth_(0)
 {
 	body_.resize(nodesNumber_);
 }
@@ -47,35 +47,32 @@ void Graph::GenerateGraph(const std::string & fileName)
 	}
 }
 
-void Graph::FindPaths(int startId, int finishId)
+void Graph::FindPaths(const int & startId, const int & finishId)
 {
 	std::vector<bool> isVisited(nodesNumber_, false);
 	std::vector<int> path;
 
-	findStep(startId, finishId, isVisited, path);
+	FindStep(startId, finishId, isVisited, path);
+
+	if (maxArmatasWidth_ == 0)
+		std::cout << "No such path is avalible!\n";
+	else
+		std::cout << "Max possible Armatas width: " << maxArmatasWidth_ << std::endl;
 }
 
-void Graph::findStep(const int & start, const int & finish, std::vector<bool>& isVisited, std::vector<int>& path)
+void Graph::FindStep(const int & start, const int & finish, std::vector<bool>& isVisited, std::vector<int>& path)
 {
 	isVisited.at(start) = true;
 	path.push_back(start);
 
 	if (start == finish)
 	{
+		// If we here, than we find path from start to finish
 		for (auto i : path)
-			std::cout << i << " --> ";
+			std::cout << i << " -> ";
 		std::cout << std::endl;
-
+		// Now we find maximum possible Armatas Width, чтобы танк смог проити по этому пути 
 		FindMaxArmatasWidth(path);
-
-		/*for (int i = 0; i < path.size() - 1; ++i)
-		{
-			int j = i + 1;
-			std::cout << "Width " << path.at(i) << " -> " << path.at(j) << " = " << getWidth(path.at(i), path.at(j)) << std::endl;
-			maxArmatasWidth_ = std::min(maxArmatasWidth_, getWidth(path.at(i), path.at(j)) - minWidth_);
-			std::cout << "now maxArmatasWidth_ = " << maxArmatasWidth_ << std::endl;
-		}*/
-
 	}
 	else
 	{
@@ -83,7 +80,7 @@ void Graph::findStep(const int & start, const int & finish, std::vector<bool>& i
 
 		for(i = body_.at(start).begin(); i != body_.at(start).end(); ++i )
 			if(!isVisited.at(i->first) && i->second > minWidth_)
-				findStep(i->first, finish, isVisited, path);
+				FindStep(i->first, finish, isVisited, path);
 		
 	}
 
@@ -93,16 +90,20 @@ void Graph::findStep(const int & start, const int & finish, std::vector<bool>& i
 
 void Graph::FindMaxArmatasWidth(const std::vector<int>& curPath)
 {
-	for (int i = 0; i < curPath.size() - 1; ++i)
+	// Find maximum possible Armatas width on current path
+	int maxWidth = 100;
+
+	for (int startId = 0; startId < curPath.size() - 1; ++startId)
 	{
-		int j = i + 1;
-		std::cout << "Width " << curPath.at(i) << " -> " << curPath.at(j) << " = " << getWidth(curPath.at(i), curPath.at(j)) << std::endl;
-		maxArmatasWidth_ = std::min(maxArmatasWidth_, getWidth(curPath.at(i), curPath.at(j)) - minWidth_);
-		std::cout << "now maxArmatasWidth_ = " << maxArmatasWidth_ << std::endl;
+		int finishId = startId + 1;
+		maxWidth = std::min(maxWidth, GetRoadWidth(curPath.at(startId), curPath.at(finishId)) - minWidth_);
 	}
+
+	// And now we chek if on curren road max possible width os bigger
+	maxArmatasWidth_ = std::max(maxWidth, maxArmatasWidth_);
 }
 
-int Graph::getWidth(const int & start, const int & finish)
+int Graph::GetRoadWidth(const int & start, const int & finish)
 {
 	for (auto & i : body_.at(start))
 	{
@@ -123,4 +124,10 @@ void Graph::Display() const
 		std::cout << std::endl;
 	}
 	std::cout << "min width = " << minWidth_ << std::endl;
+}
+
+void Graph::Solver(const std::string & fileName, const int & start, const int & finish)
+{
+	GenerateGraph(fileName);
+	FindPaths(start, finish);
 }

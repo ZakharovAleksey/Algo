@@ -53,8 +53,9 @@ void Generator::GenerateRoads()
 		for (auto & i : conditions)
 		{
 			out << i.startId << " " << i.finishId << " " << i.width << std::endl;
-			//std::cout << i.startId << " " << i.finishId << " " << i.width << std::endl;
+			std::cout << i.startId << " " << i.finishId << " " << i.width << std::endl;
 		}
+		std::cout << "-------------" << std::endl;
 	}
 	else
 	{
@@ -69,9 +70,12 @@ void Generator::GenerateRoads()
 
 void Generator::AddCondition(std::vector<Condition>* conditions, Condition* curCondition)
 {
-	// Random generation of cities Id and width of the road between them
-	curCondition->startId = rand() % citiesNumber_;
-	curCondition->finishId = rand() % citiesNumber_;
+	// Что-то не то с генерацией условий! последний город на нег нет связей никогда!!!!!!
+
+
+	// Random generation of cities Id and width of the road between them (+1 for using last city)
+	curCondition->startId = rand() % citiesNumber_;// +1;
+	curCondition->finishId = rand() % citiesNumber_;// +1;
 	curCondition->width = kMinRoadWigth + rand() % (kMaxRoadWigth - kMinRoadWigth);
 
 	// Check that it is different cities and that condition of this type is already exist

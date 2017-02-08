@@ -139,14 +139,10 @@ void Graph::Display() const
 
 void Graph::Solver(const std::string & fileName)
 {
-	
 	GenerateGraph(fileName);
-	std::cout << "generated\n";
+
 	int start = 0;
 	int finish = nodesNumber_ - 2;
-	std::cout << "strat = " << start << std::endl;
-	std::cout << "finish = " << finish << std::endl;
 
 	FindPaths(start, finish);
-	std::cout << "path\n";
 }

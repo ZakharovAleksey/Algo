@@ -129,7 +129,7 @@ void Manager::ExecutionTask6() const
 
 		std::vector<std::string> parts(beg, end);
 
-		if (parts.at(0) == "opt.exe")
+		if (!parts.empty() && parts.at(0) == "opt.exe")
 		{
 			if (parts.at(1) == "-g")
 			{
@@ -144,10 +144,7 @@ void Manager::ExecutionTask6() const
 			{
 				fileName = parts.at(2);
 
-				std::cout << "!-> " << fileName << std::endl;
-
 				Graph gr;
-				std::cout << "created\n";
 				gr.Solver(fileName);
 			}
 		}

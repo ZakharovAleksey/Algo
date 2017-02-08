@@ -6,6 +6,12 @@ set(
 	"Task_5/bin_tree/bin_tree_impl.h"
 	"Task_5/test/test.h"
 	"Task_5/test/test.cpp"
+	"Task_6/generator/generator.h"
+	"Task_6/generator/generator.cpp"
+	"Task_6/graph/graph.h"
+	"Task_6/graph/graph.cpp"
+	"Manager/manager.h"
+	"Manager/manager.cpp"
 	"main.cpp"
 )
 

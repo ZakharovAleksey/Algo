@@ -1,9 +1,11 @@
 #include<iostream>
 
-#include"Task_5\test\test.h"
+//#include"Task_5\test\test.h"
+//
+//#include"Task_6\Generator\generator.h"
+//#include"Task_6\Graph\graph.h"
 
-#include"Task_6\Generator\generator.h"
-#include"Task_6\Graph\graph.h"
+#include"Manager\manager.h"
 
 #include<ctime>
 
@@ -14,19 +16,23 @@ int main()
 {
 	srand(time(NULL));
 
-	//Task5Test test(5);
-	//test.TestFunction(5);
-
-
-	int citiesNumber = 5;
-	int roadsNumber = 7;
-	std::string outFileName = "test";
-
-	Generator gen(citiesNumber, roadsNumber, outFileName);
-	gen.GenerateRoads();
-
-	Graph gr(citiesNumber, roadsNumber);
-	gr.Solver(outFileName, 0, 3);
+	try
+	{
+		Manager manage;
+		manage.TaskLoop();
+	}
+	catch (const std::exception & message)
+	{
+		std::cout << message.what();
+	}
+	catch (std::string & message)
+	{
+		std::cout << message;
+	}
+	catch (...)
+	{
+		std::cout << "Unknown exception!\n";
+	}
 
 	return 0;
 }

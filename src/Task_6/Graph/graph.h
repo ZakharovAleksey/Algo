@@ -10,13 +10,14 @@
 class Graph
 {
 public:
+	Graph();
 	Graph(const int & nodesNumber, const int & relationNumber);
 	~Graph();
 
 	void GenerateGraph(const std::string & fileName);
 	void FindPaths(const int & startId, const int & finishId);
 	void Display() const;
-	void Solver(const std::string & fileName, const int & start, const int & finish);
+	void Solver(const std::string & fileName);
 
 private:
 	void AddEdge(const int & start, const int & finish, const int & width);

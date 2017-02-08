@@ -10,6 +10,8 @@ set(
 	"Task_6/generator/generator.cpp"
 	"Task_6/graph/graph.h"
 	"Task_6/graph/graph.cpp"
+	"Manager/manager.h"
+	"Manager/manager.cpp"
 	"main.cpp"
 )
 

@@ -5,7 +5,12 @@
 #include<algorithm>
 
 
-Graph::Graph(const int & nodesNumber, const int & relationNumber) : 
+Graph::Graph() :
+	nodesNumber_(0), relationNumber_(0),
+	minWidth_(100), maxArmatasWidth_(0) 
+{}
+
+Graph::Graph(const int & nodesNumber, const int & relationNumber) :
 	nodesNumber_(nodesNumber), relationNumber_(relationNumber), 
 	minWidth_(100), maxArmatasWidth_(0)
 {
@@ -28,6 +33,12 @@ void Graph::GenerateGraph(const std::string & fileName)
 
 	if (in.is_open())
 	{
+		in >> nodesNumber_ >> relationNumber_;
+		in.get();
+
+		if(body_.empty())
+			body_.resize(nodesNumber_);
+
 		int start = -1;
 		int finish = -1;
 		int width = -1;
@@ -126,8 +137,16 @@ void Graph::Display() const
 	std::cout << "min width = " << minWidth_ << std::endl;
 }
 
-void Graph::Solver(const std::string & fileName, const int & start, const int & finish)
+void Graph::Solver(const std::string & fileName)
 {
+	
 	GenerateGraph(fileName);
+	std::cout << "generated\n";
+	int start = 0;
+	int finish = nodesNumber_ - 2;
+	std::cout << "strat = " << start << std::endl;
+	std::cout << "finish = " << finish << std::endl;
+
 	FindPaths(start, finish);
+	std::cout << "path\n";
 }

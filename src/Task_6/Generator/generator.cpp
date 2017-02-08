@@ -50,6 +50,8 @@ void Generator::GenerateRoads()
 		});
 
 		// Write them in file
+		out << citiesNumber_ << " " << roadsNumber_ << std::endl;
+
 		for (auto & i : conditions)
 		{
 			out << i.startId << " " << i.finishId << " " << i.width << std::endl;

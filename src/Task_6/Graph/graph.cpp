@@ -2,8 +2,12 @@
 
 #include<fstream>
 #include<iostream>
+#include<algorithm>
 
-Graph::Graph(const int & nodesNumber, const int & relationNumber) : nodesNumber_(nodesNumber), relationNumber_(relationNumber)
+
+Graph::Graph(const int & nodesNumber, const int & relationNumber) : 
+	nodesNumber_(nodesNumber), relationNumber_(relationNumber), 
+	minWidth_(100), maxArmatasWidth_(100)
 {
 	body_.resize(nodesNumber_);
 }
@@ -32,6 +36,7 @@ void Graph::GenerateGraph(const std::string & fileName)
 		{
 			in >> start >> finish >> width;
 			AddEdge(start, finish, width);
+			minWidth_ = std::min(minWidth_, width);
 		}
 		Display();
 	}
@@ -60,19 +65,52 @@ void Graph::findStep(const int & start, const int & finish, std::vector<bool>& i
 		for (auto i : path)
 			std::cout << i << " --> ";
 		std::cout << std::endl;
+
+		FindMaxArmatasWidth(path);
+
+		/*for (int i = 0; i < path.size() - 1; ++i)
+		{
+			int j = i + 1;
+			std::cout << "Width " << path.at(i) << " -> " << path.at(j) << " = " << getWidth(path.at(i), path.at(j)) << std::endl;
+			maxArmatasWidth_ = std::min(maxArmatasWidth_, getWidth(path.at(i), path.at(j)) - minWidth_);
+			std::cout << "now maxArmatasWidth_ = " << maxArmatasWidth_ << std::endl;
+		}*/
+
 	}
 	else
 	{
 		std::list<std::pair<int, int>>::iterator i;
 
 		for(i = body_.at(start).begin(); i != body_.at(start).end(); ++i )
-			if(!isVisited.at(i->first))
+			if(!isVisited.at(i->first) && i->second > minWidth_)
 				findStep(i->first, finish, isVisited, path);
 		
 	}
 
 	path.pop_back();
 	isVisited.at(start) = false;
+}
+
+void Graph::FindMaxArmatasWidth(const std::vector<int>& curPath)
+{
+	for (int i = 0; i < curPath.size() - 1; ++i)
+	{
+		int j = i + 1;
+		std::cout << "Width " << curPath.at(i) << " -> " << curPath.at(j) << " = " << getWidth(curPath.at(i), curPath.at(j)) << std::endl;
+		maxArmatasWidth_ = std::min(maxArmatasWidth_, getWidth(curPath.at(i), curPath.at(j)) - minWidth_);
+		std::cout << "now maxArmatasWidth_ = " << maxArmatasWidth_ << std::endl;
+	}
+}
+
+int Graph::getWidth(const int & start, const int & finish)
+{
+	for (auto & i : body_.at(start))
+	{
+		if (i.first == finish)
+			return i.second;
+	}
+	std::cout << "WRONG IN getWIdth!\n";
+	return -1;
 }
 
 void Graph::Display() const
@@ -84,4 +122,5 @@ void Graph::Display() const
 			std::cout << j.first << " (" << j.second << ") -> ";
 		std::cout << std::endl;
 	}
+	std::cout << "min width = " << minWidth_ << std::endl;
 }

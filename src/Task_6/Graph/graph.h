@@ -24,9 +24,15 @@ private:
 	// ѕереписать через указатели так как мен€ютс€
 	void findStep(const int & start, const int & finish, std::vector<bool> & isVisited, std::vector<int> & path);
 
+	void FindMaxArmatasWidth(const std::vector<int> & curPath);
+	int getWidth(const int & start, const int & finish);
+
 
 	int nodesNumber_;
 	int relationNumber_;
+	int minWidth_;
+	int maxArmatasWidth_;
+
 	std::vector<std::list<std::pair<int, int>>> body_;
 };
 

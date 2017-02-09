@@ -1,25 +1,17 @@
-#include<iostream>
-
-//#include"Task_5\test\test.h"
-//
-//#include"Task_6\Generator\generator.h"
-//#include"Task_6\Graph\graph.h"
-
 #include"Manager\manager.h"
 
+#include<iostream>
 #include<ctime>
 
-// Нужен бдет еще менеджер который управляет задиниями а в 6 он проверяет корректность ввода пользователя
-
-// Чтобы делать дороги двухнаправленными надо просто в графе добавлять два пути сразу!! A->B и из B->A тогда может двигаться и туда и туда!!!
 int main()
 {
 	srand(time(NULL));
 
 	try
 	{
-		Manager manage;
-		manage.TaskLoop();
+		// Start manager
+		Manager manager;
+		manager.TaskLoop();
 	}
 	catch (const std::exception & message)
 	{

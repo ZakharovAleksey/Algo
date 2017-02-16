@@ -16,8 +16,8 @@ int kMaxRoadWigth = 100;
 bool IsInConditions(std::vector<Generator::Condition> const & vec, Generator::Condition const & item)
 {
 	for (auto & i : vec)
-		if (( i.startId == item.startId && i.finishId == item.finishId)) 
-			//||  ( i.finishId == item.startId && i.startId == item.finishId))
+		if (( i.startId == item.startId && i.finishId == item.finishId) //) рсрс!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+			||  ( i.finishId == item.startId && i.startId == item.finishId))
 			return true;
 
 	return false;	
@@ -40,7 +40,7 @@ void Generator::GenerateRoads()
 	if (out.is_open())
 	{
 		// If graph is connected
-		if (roadsNumber_ > citiesNumber_ * (citiesNumber_ - 1))
+		if (roadsNumber_ > citiesNumber_ * (citiesNumber_ - 1) / 2)
 		{
 			FillConnectedGraph(&conditions, &curCondition);
 		}
@@ -49,6 +49,8 @@ void Generator::GenerateRoads()
 			// Add conditions
 			for (int roadId = 0; roadId < roadsNumber_; ++roadId)
 				AddCondition(&conditions, &curCondition);
+
+
 
 			// Sort them on the start city Id for future convenience
 			std::sort(conditions.begin(), conditions.end(),
@@ -94,6 +96,11 @@ void Generator::AddCondition(std::vector<Condition>* conditions, Condition* curC
 		curCondition->finishId = rand() % citiesNumber_;
 	}
 
+	if (curCondition->finishId < curCondition->startId)
+	{
+		std::swap(curCondition->finishId, curCondition->startId);
+	}
+
 	std::cout << curCondition->startId << " " << curCondition->finishId << std::endl;
 
 	conditions->push_back(*curCondition);
@@ -101,7 +108,7 @@ void Generator::AddCondition(std::vector<Condition>* conditions, Condition* curC
 
 void Generator::FillConnectedGraph(std::vector<Condition>* conditions, Condition * curCondition)
 {
-	roadsNumber_ = citiesNumber_ * (citiesNumber_ - 1);
+	roadsNumber_ = citiesNumber_ * (citiesNumber_ - 1) /2;
 
 	for (int i = 0; i < citiesNumber_; ++i)
 		for (int j = 0; j < citiesNumber_; ++j)

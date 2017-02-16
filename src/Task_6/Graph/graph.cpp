@@ -3,7 +3,27 @@
 #include<fstream>
 #include<iostream>
 #include<algorithm>
+#include<vector>
+#include<cmath>
+#include<queue>
+#include<map>
 
+// Finds index of node with the biggest width from all not visited yet nodes
+int FindNodeWithMaxWidth(const std::vector<int> & width, const std::vector<bool> & isVisited, const int & minWidth)
+{
+	int curNodeId = -1, curMaxWidth = minWidth;
+
+	for (int i = 0; i < width.size(); ++i)
+	{
+		if (!isVisited.at(i) && width.at(i) > curMaxWidth)
+		{
+			curMaxWidth = width.at(i);
+			curNodeId = i;
+		}
+	}
+
+	return curNodeId;
+}
 
 Graph::Graph() :
 	nodesNumber_(0), relationNumber_(0),
@@ -71,12 +91,17 @@ void Graph::FindPaths(const int & startId, const int & finishId)
 	std::vector<int> path;
 
 	// Recursive function which pind all possible paths from 'startId' node to 'finishId' node
-	FindStep(startId, finishId, isVisited, path);
+	//FindStep(startId, finishId, isVisited, path);
+
+	// Function finds maximum possible width using BFS
+	BFSFindMaxWidth(startId, finishId);
 
 	if (maxArmatasWidth_ == 0)
 		std::cout << "No such path is avalible!\n";
 	else
 		std::cout << "Max possible Armatas width: " << maxArmatasWidth_ << std::endl;
+
+	
 }
 
 void Graph::FindStep(const int & start, const int & finish, std::vector<bool>& isVisited, std::vector<int>& path)
@@ -87,9 +112,11 @@ void Graph::FindStep(const int & start, const int & finish, std::vector<bool>& i
 	if (start == finish)
 	{
 		// If we here, than we find path from start to finish
-		for (auto i : path)
-			std::cout << i << " -> ";
-		std::cout << std::endl;
+
+		//for (auto i : path)
+		//	std::cout << i << " -> ";
+		//std::cout << std::endl;
+
 		// Obtain maximum possible Armata's Width, in a way that tank could use this way and
 		// the minimul width did not change
 		FindMaxArmatasWidth(path);
@@ -109,6 +136,61 @@ void Graph::FindStep(const int & start, const int & finish, std::vector<bool>& i
 	// If this is a dead end, take a step back
 	path.pop_back();
 	isVisited.at(start) = false;
+}
+
+void Graph::BFSFindMaxWidth(const int & startId, const int & finishId)
+{
+	// Initial value of width for all nodes
+	int minWidth = -100;
+	std::vector<bool> isVisited(nodesNumber_, false);
+	// Store maximum width from start node to current
+	std::vector<int> width(nodesNumber_, minWidth);
+
+	width.at(startId) = 0;
+
+	for (int curNode = 0; curNode < nodesNumber_; curNode++)
+	{
+		// Index of node with the biggest width from all not visited yet nodes
+		int stepFromId = FindNodeWithMaxWidth(width, isVisited, minWidth);
+
+		if (stepFromId != -1)
+		{
+			// Set node as visited
+			isVisited.at(stepFromId) = true;
+
+			std::list<std::pair<int, int>>::iterator it;
+			// Looping through all the neighbours of the current node
+			for (it = body_.at(stepFromId).begin(); it != body_.at(stepFromId).end(); ++it)
+			{
+				// If we could go to this neighbor
+				if (!isVisited.at(it->first) && GetRoadWidth(stepFromId, it->first) > minWidth_)
+				{
+					// If this node is the finish node
+					if (it->first == finishId)
+					{
+						// If we get to the finish node from the start by single step:
+						// finish node width is equal to (width of the road - minimum road width)
+						if (width.at(stepFromId) == 0)
+							width.at(it->first) = GetRoadWidth(stepFromId, it->first) - minWidth_;
+						// Obtain maximum from all possible widths
+						width.at(it->first) = std::max(std::min(GetRoadWidth(stepFromId, it->first) - minWidth_, width.at(stepFromId)), width.at(it->first));
+					}
+					// If we start from start node - width of it's neighbours
+					// is equal to (width of the road - minimum road width)
+					if (stepFromId == startId)
+						width.at(it->first) = GetRoadWidth(stepFromId, it->first) - minWidth_;
+					// If node is not finised node, it's width is equal to
+					// minimum from (width of the road - minimum road width) and width of 'stepFromId' node
+					else if (it->first != finishId)
+					{
+						width.at(it->first) = std::min(GetRoadWidth(stepFromId, it->first) - minWidth_, width.at(stepFromId));
+					}
+				}
+			}
+		}
+	}
+
+	maxArmatasWidth_ = width.at(finishId);
 }
 
 void Graph::FindMaxArmatasWidth(const std::vector<int>& curPath)

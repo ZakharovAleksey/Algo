@@ -53,6 +53,12 @@ private:
 	/// <param name="path"> Vector which stores curernt path. </param>
 	void FindStep(const int & start, const int & finish, std::vector<bool> & isVisited, std::vector<int> & path);
 	/// <summary>
+	/// Function finds maximum possible width in graph using BFS
+	/// </summary>
+	/// <param name="start"> Index of the starting node. </param>
+	/// <param name="finish"> Index of the last node. </param>
+	void BFSFindMaxWidth(const int & start, const int & finish);
+	/// <summary>
 	/// Calculates maximum possible Armata's width on the current path 'curPath'.
 	/// </summary>
 	/// <param name="curPath"> Current path leading from start node to finish node. </param>
